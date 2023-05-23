@@ -2,6 +2,7 @@ const AGE_OF_THE_OLDEST_PERSON: number = 123;
 const CURRENT_NEW_DATE: Date = new Date();
 
 const typeDateAndGender = (date: Date, gender: "male" | "female") => {
+  // isDateString(date);
   isDateValid(date);
   const firstDigit = Number(String(date.getFullYear()).slice(2, 3));
   const secondDigit = Number(String(date.getFullYear()).slice(3, 4));
@@ -26,8 +27,9 @@ const typeDateAndGender = (date: Date, gender: "male" | "female") => {
     tenthDigit * 3;
   const lastDigitCeil = Math.ceil(sumOfPESELDigitsExcludingLast / 10);
   const lastDigit = lastDigitCeil * 10 - sumOfPESELDigitsExcludingLast;
-  console.log(lastDigit);
-  console.log(
+  // console.log(lastDigit);
+  const emptyArray: number[] = [];
+  const arrayOfPESELDigits = emptyArray.concat(
     firstDigit,
     secondDigit,
     thirdDigit,
@@ -40,7 +42,17 @@ const typeDateAndGender = (date: Date, gender: "male" | "female") => {
     tenthDigit,
     lastDigit
   );
-  return sumOfPESELDigitsExcludingLast + lastDigit;
+  console.log(arrayOfPESELDigits);
+  const arrayOfPESELDigitsToString = arrayOfPESELDigits.map((element) =>
+    element.toString()
+  );
+  console.log(arrayOfPESELDigitsToString);
+  const generatedPESELNumber = arrayOfPESELDigitsToString.reduce(
+    (a, b) => a + b
+  );
+  const sumOfWagedPeselDigits = sumOfPESELDigitsExcludingLast + lastDigit;
+  console.log(`sum of waged PESEL digits is ${sumOfWagedPeselDigits}`);
+  return generatedPESELNumber;
 };
 
 const isDateValid = (input: Date) => {
@@ -68,6 +80,20 @@ const isDateValid = (input: Date) => {
   }
 };
 
+const isDateString = (input: string) => {
+  if (
+    /^\d{4}[ ]\d{2}[ ]\d{2}$/.test(input) ||
+    /^\d{4}[.]\d{2}[.]\d{2}$/.test(input) ||
+    /^\d{4}[/]\d{2}[/]\d{2}$/.test(input) ||
+    /^\d{4}[-]\d{2}[-]\d{2}$/.test(input)
+  ) {
+    return isDateValid(new Date(input));
+  }
+  throw new Error(
+    "You must provide string with 4 digits (year only) or in full date format"
+  );
+};
+
 const getDayFromDate = (date: Date) => {
   if (date.getDate() < 10 && date.getDate() >= 0) {
     return `0${date.getDate()}`;
@@ -81,7 +107,9 @@ const getMonthFromDate = (date: Date) => {
   if (date.getFullYear() >= 2000) {
     return date.getMonth() + 20;
   }
-  return date.getMonth;
+  if (date.getMonth() < 10 && date.getMonth() >= 0) {
+    return `0${date.getMonth()}`;
+  }
 };
 
 const generateRandomNumberFrom0to9 = () => {
@@ -97,4 +125,10 @@ const isMaleOrFemale = (gender: "male" | "female") => {
   return femaleArray[Math.floor(Math.random() * femaleArray.length)];
 };
 
-console.log(typeDateAndGender(new Date(2022, 11, 1), "male"));
+console.log(typeDateAndGender(new Date(1997, 5, 22), "female"));
+
+// const sum = (num1: number, num2: number) => {
+//   return num1 + num2;
+// };
+
+// module.exports = sum;
