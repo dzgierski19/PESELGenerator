@@ -10,9 +10,7 @@ const typeDateAndGender = (date: Date, gender: "male" | "female") => {
   const forthDigit = Number(String(getMonthFromDate(date)).slice(1, 2));
   const fifthDigit = Number(String(getDayFromDate(date)).slice(0, 1));
   const sixthDigit = Number(String(getDayFromDate(date)).slice(1, 2));
-  const seventhDigit = generateRandomNumberFrom0to9();
-  const eighthDigit = generateRandomNumberFrom0to9();
-  const ninethDigit = generateRandomNumberFrom0to9();
+  const digitFromSevenToNine = generateRandomNumberFrom0to9();
   const tenthDigit = isMaleOrFemale(gender);
   const sumOfPESELDigitsExcludingLast =
     firstDigit +
@@ -21,9 +19,9 @@ const typeDateAndGender = (date: Date, gender: "male" | "female") => {
     forthDigit * 9 +
     fifthDigit +
     sixthDigit * 3 +
-    seventhDigit * 7 +
-    eighthDigit * 9 +
-    ninethDigit +
+    digitFromSevenToNine * 7 +
+    digitFromSevenToNine * 9 +
+    digitFromSevenToNine +
     tenthDigit * 3;
   const lastDigitCeil = Math.ceil(sumOfPESELDigitsExcludingLast / 10);
   const lastDigit = lastDigitCeil * 10 - sumOfPESELDigitsExcludingLast;
@@ -36,9 +34,9 @@ const typeDateAndGender = (date: Date, gender: "male" | "female") => {
     forthDigit,
     fifthDigit,
     sixthDigit,
-    seventhDigit,
-    eighthDigit,
-    ninethDigit,
+    digitFromSevenToNine,
+    digitFromSevenToNine,
+    digitFromSevenToNine,
     tenthDigit,
     lastDigit
   );
