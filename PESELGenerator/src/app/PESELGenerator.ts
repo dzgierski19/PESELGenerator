@@ -1,7 +1,9 @@
+import { MALE_NUMBERS, FEMALE_NUMBERS } from "./GenderConsts";
+
 export const typeDateAndGender = (
   date: Date | string,
   gender: "male" | "female",
-  getRandomNumber: () => number,
+  getRandomNumberAsString: () => string,
   getGenderNumber: (gender: string) => number
 ) => {
   const checkedInputType = isInputDateOrString(date);
@@ -12,9 +14,9 @@ export const typeDateAndGender = (
   const thirdAndForthDigit = getMonthFromDate(checkedInputType).slice(0, 2);
   const fifthAndSixthDigit = getDayFromDate(checkedInputType).slice(0, 2);
   const digitsFromSevenToNine =
-    String(getRandomNumber()) +
-    String(getRandomNumber()) +
-    String(getRandomNumber());
+    getRandomNumberAsString() +
+    getRandomNumberAsString() +
+    getRandomNumberAsString();
   const tenthDigit = getGenderNumber(gender);
   const PESELWithoutLastDigit =
     firstAndSecondDigit +
@@ -22,45 +24,39 @@ export const typeDateAndGender = (
     fifthAndSixthDigit +
     digitsFromSevenToNine +
     tenthDigit;
-  const PESELToNumber = PESELWithoutLastDigit.split("").map((element) =>
-    Number(element)
-  );
-  const summedPESEL = PESELToNumber.reduce((acc, curr, index) => {
-    if (index === 0 || index === 4 || index === 8) {
-      return acc + curr;
-    }
-    if (index === 1 || index === 5 || index === 9) {
-      return acc + curr * 3;
-    }
-    if (index === 2 || index === 6) {
-      return acc + curr * 7;
-    }
-    if (index === 3 || index === 7) {
-      return acc + curr * 9;
-    }
-    return acc;
-  }, 0);
-  // const sumOfPESELDigitsExcludingLast =
-  //   PESELToNumber[0] +
-  //   PESELToNumber[1] * 3 +
-  //   PESELToNumber[2] * 7 +
-  //   PESELToNumber[3] * 9 +
-  //   PESELToNumber[4] +
-  //   PESELToNumber[5] * 3 +
-  //   PESELToNumber[6] * 7 +
-  //   PESELToNumber[7] * 9 +
-  //   PESELToNumber[8] +
-  //   PESELToNumber[9] * 3;
-
-  // console.log(sumOfPESELDigitsExcludingLast + "manual");
-  const lastDigit = () => {
-    if (summedPESEL % 10 === 0) {
-      return String(0);
-    }
-    return String(10 - (summedPESEL % 10));
-  };
-  const PESEL = PESELWithoutLastDigit + lastDigit();
+  const summedWagedPESEL = sumWagedPESEL(PESELWithoutLastDigit);
+  const lastDigit = calculateLastDigit(summedWagedPESEL);
+  const PESEL = PESELWithoutLastDigit + lastDigit;
   return PESEL;
+};
+
+const sumWagedPESEL = (input: string) => {
+  return input
+    .split("")
+    .map((element) => Number(element))
+    .reduce((acc, curr, index) => {
+      if (index === 0 || index === 4 || index === 8) {
+        return acc + curr;
+      }
+      if (index === 1 || index === 5 || index === 9) {
+        return acc + curr * 3;
+      }
+      if (index === 2 || index === 6) {
+        return acc + curr * 7;
+      }
+      if (index === 3 || index === 7) {
+        return acc + curr * 9;
+      }
+      return acc;
+    }, 0);
+};
+
+export const calculateLastDigit = (input: number) => {
+  const moduloOf10 = input % 10;
+  if (moduloOf10) {
+    return String(10 - moduloOf10);
+  }
+  return String(0);
 };
 
 const isInputDateOrString = (input: Date | string) => {
@@ -126,25 +122,28 @@ const getMonthFromDate = (date: Date) => {
 
 const get3RandomNumbers = () => {
   return (
-    String(getRandomNumber()) +
-    String(getRandomNumber()) +
-    String(getRandomNumber())
+    String(getRandomNumberAsString()) +
+    String(getRandomNumberAsString()) +
+    String(getRandomNumberAsString())
   );
 };
 
-const getRandomNumber = () => {
-  return Math.floor(Math.random() * 10);
+const getRandomNumberAsString = () => {
+  return String(Math.floor(Math.random() * 10));
 };
 
-const getGenderNumber = (gender: "male" | "female") => {
-  const maleArray = [1, 3, 5, 7, 9];
-  const femaleArray = [0, 2, 4, 6, 8];
+export const getGenderNumber = (gender: "male" | "female") => {
   if (gender === "male") {
-    return maleArray[Math.floor(Math.random() * maleArray.length)];
+    return MALE_NUMBERS[Math.floor(Math.random() * MALE_NUMBERS.length)];
   }
-  return femaleArray[Math.floor(Math.random() * femaleArray.length)];
+  return FEMALE_NUMBERS[Math.floor(Math.random() * FEMALE_NUMBERS.length)];
 };
 
 console.log(
-  typeDateAndGender(new Date(), "male", getRandomNumber, getGenderNumber)
+  typeDateAndGender(
+    new Date(),
+    "male",
+    getRandomNumberAsString,
+    getGenderNumber
+  )
 );
